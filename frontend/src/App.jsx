@@ -1,22 +1,32 @@
 import FormPessoa from "./form-entra-pessoa/form-pessoa";
 import TablePessoa from "./table-lista-pessoas/form-pessoa";
+import {getPessoas} from "./api/pessoa.server";
 import { useState, useEffect } from "react";
 
 const App = () => {
-  const [dados, setDados] = useState([
-    { nome: "Jonathan", sobrenome: "Oliveira", idade: 20 },
-    { nome: "Cauã", sobrenome: "Cruz", idade: 17 },
-    { nome: "Natan", sobrenome: "Emanuel", idade: 20 },
-    { nome: "João", sobrenome: "Lucas", idade: 17 },
-    { nome: "Leo", sobrenome: "Cardoso", idade: 18 },
-  ]);
-  const salvar = (novaPessoas)=>{
-    setDados([...dados, novaPessoas])
-  }
+  const [dados, setDados] = useState([]);
+  const [current, setCurrent] = useState({
+    nome: null,
+    sobrenome: null,
+    idade: null,
+  });
+
+  useEffect(() => {
+    fetchPessoas();
+  }, []);
+
+  const fetchPessoas = async () => {
+    const resultado = await getPessoas();
+    setDados(resultado);
+  };
+
+  const handlePessoa = async (novoDado) => {
+    await setCurrent(novoDado);
+  };
 
   return (
     <>
-      <FormPessoa  adicionarPessoa={salvar}/>
+      <FormPessoa current={current} insertPessoa={setCurrent} />
       <TablePessoa pessoas={dados} />
     </>
   );

@@ -9,3 +9,13 @@ exports.listarPessoas = async (req, res) => {
   }
 };
 
+exports.inserirPessoa = async (req, res) => {
+  try {
+    const { nome, sobrenome, idade } = req.body;
+    const novaPessoa = await Pessoa.create({ nome, sobrenome, idade });
+    res.status(201).json(novaPessoa);
+  } catch (err) {
+    res.status(400).json({ message: `Erro: ${err.message}` });
+  }
+};
+

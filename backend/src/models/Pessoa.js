@@ -1,36 +1,23 @@
-const { Sequelize, DataTypes } = require("sequelize");
-require("dotenv").config();
+const mySQLcon = require("../../connection");
 
-const sequelize = new Sequelize(
-  process.env.DB_DATABASE,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD,
-  {
-    host: process.env.DB_HOST,
-    dialect: "mysql",
-    port: process.env.DB_PORT,
-  }
-);
-
-const Pessoa = sequelize.define(
+const Pessoa = mySQLcon.config.define(
   "Pessoa",
   {
     id: {
-      type: DataTypes.INTEGER,
+      type: mySQLcon.dataTypes.INTEGER,
+      primaryKey: true,
       autoIncrement: true,
       allowNull: false,
-      primaryKey: true,
     },
     nome: {
-      type: DataTypes.STRING,
+      type: mySQLcon.dataTypes.STRING,
       allowNull: false,
     },
     sobrenome: {
-      type: DataTypes.STRING,
-      allowNull: false,
+      type: mySQLcon.dataTypes.STRING,
     },
     idade: {
-      type: DataTypes.INTEGER,
+      type: mySQLcon.dataTypes.INTEGER,
       allowNull: false,
     },
   },
