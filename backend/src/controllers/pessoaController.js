@@ -14,8 +14,8 @@ exports.inserirPessoa = async (req, res) => {
     const { nome, sobrenome, idade } = req.body;
     const novaPessoa = await Pessoa.create({ nome, sobrenome, idade });
     res.status(201).json(novaPessoa);
-  } catch (err) {
-    res.status(400).json({ message: `Erro: ${err.message}` });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
   }
 };
 
