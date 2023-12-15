@@ -5,8 +5,9 @@ import { useState, useEffect } from "react";
 
 const App = () => {
   const [dados, setDados] = useState([]);
-  const [onAction, setOnAction] = useState(false);
-  const [current, setCurrent] = useState({
+  const [onAction, setAction] = useState(false);
+  const [selected, setSelected] = useState({
+    id: null,
     nome: null,
     sobrenome: null,
     idade: null,
@@ -21,15 +22,33 @@ const App = () => {
     setDados(resultado);
   };
 
-  const handlePessoa = async (novoDado) => {
+  const handleSubmit = async (novoDado) => {
     await apiAddPessoa(novoDado);
-    setOnAction(!onAction);
+    setAction(!onAction);
+  };
+
+  const handleClick = (e, pessoa) => {
+    if (e.type === "click") {
+      const confirmarUpdate = window.confirm(
+        `Você tem certeza que deseja atualizar os dados de ${pessoa.nome}?`
+      );
+      if (confirmarUpdate) {
+        setSelected(pessoa);
+      }
+    } else if (e.type === "contextmenu") {
+      e.preventDefault();
+      if (e.button === 2) {
+        const confirmarDelete = window.confirm(
+          `Você tem certeza que deseja atualizar os dados de ${pessoa.nome}?`
+        );
+      }
+    }
   };
 
   return (
     <>
-      <FormPessoa current={current} insertPessoa={handlePessoa} />
-      <TablePessoa pessoas={dados} />
+      <FormPessoa selected={selected} handleSubmit={handleSubmit} />
+      <TablePessoa pessoas={dados} handleClick={handleClick} />
     </>
   );
 };

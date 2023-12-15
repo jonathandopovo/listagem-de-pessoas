@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-const FormPessoa = ({ current, insertPessoa }) => {
+const FormPessoa = ({ selected, handleSubmit }) => {
   const [pessoa, setPessoa] = useState({});
+
+  useEffect(()=>{
+    setPessoa(selected)
+  }, [selected])
+
   const submit = (e) => {
     e.preventDefault();
-    insertPessoa(pessoa);
-    setPessoa({ nome: "", sobrenome: "", idade: "" });
+    handleSubmit(pessoa);
   };
 
   return (
@@ -19,7 +23,7 @@ const FormPessoa = ({ current, insertPessoa }) => {
             type="text"
             className="bg-secondary rounded-full py-2 px-3 text-fontcolor2 w-full"
             placeholder="Nome"
-            value={pessoa.nome}
+            defaultValue={selected.nome}
             onChange={(e) => setPessoa({ ...pessoa, nome: e.target.value })}
             required
           />
@@ -27,7 +31,7 @@ const FormPessoa = ({ current, insertPessoa }) => {
             type="text"
             className="bg-secondary rounded-full py-2 px-3 text-fontcolor2 w-full"
             placeholder="Sobrenome"
-            value={pessoa.sobrenome}
+            defaultValue={selected.sobrenome}
             onChange={(e) =>
               setPessoa({ ...pessoa, sobrenome: e.target.value })
             }
@@ -37,7 +41,7 @@ const FormPessoa = ({ current, insertPessoa }) => {
             type="number"
             className="bg-secondary rounded-full py-2 px-3 text-fontcolor2 w-full"
             placeholder="Idade"
-            value={pessoa.idade}
+            defaultValue={selected.idade}
             onChange={(e) =>
               setPessoa({ ...pessoa, idade: parseInt(e.target.value) })
             }

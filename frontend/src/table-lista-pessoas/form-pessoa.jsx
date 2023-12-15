@@ -1,4 +1,4 @@
-const TablePessoa = ({ pessoas }) => {
+const TablePessoa = ({ pessoas, handleClick }) => {
   return (
     <>
       <div className="relative overflow-x-auto sm:rounded-lg mt-5 shadow-2xl">
@@ -21,7 +21,16 @@ const TablePessoa = ({ pessoas }) => {
           </thead>
           <tbody>
             {pessoas.map((pessoa, index) => (
-              <tr key={index}>
+              <tr
+                key={index}
+                className="hover:bg-gray-500/20"
+                onClick={(e) => {
+                  handleClick(e, pessoa);
+                }}
+                onContextMenu={(e) => {
+                  handleClick(e, pessoa);
+                }}
+              >
                 <th
                   scope="row"
                   className="px-6 py-4 font-medium text-gray-50 whitespace-nowrap dark:text-fontcolor2"
