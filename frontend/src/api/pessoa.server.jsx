@@ -1,18 +1,20 @@
 const URL_API = "http://localhost:8000/api";
 
-export const apiGetPessoas = async () => {
+const apiGetPessoas = async () => {
   try {
-    const response = await fetch(`${URL_API}/pessoa`);
-    if (!response.ok) {
-      throw new Error("Falha na requisição!");
+    const resposta = await fetch(`${URL_API}/pessoa`);
+
+    if (!resposta.ok) {
+      throw new Error("Falha na requisição");
     }
-    return await response.json();
-  } catch (err) {
-    throw new Error("Erro ao carregar os dados!");
+
+    return await resposta.json();
+  } catch (error) {
+    throw new Error("Não foi possível carregar os dados");
   }
 };
 
-export const apiAddPessoa = async (novaPessoa) => {
+const apiAddPessoa = async (novaPessoa) => {
   try {
     const res = await fetch(`${URL_API}/pessoa/add`, {
       method: "POST",
@@ -26,9 +28,67 @@ export const apiAddPessoa = async (novaPessoa) => {
       throw new Error("Houve erro na adição do usuário");
     }
 
+    return await res.json();
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+const apiUpdatePessoa = async (id, pessoaEdit) => {
+  try {
+    const res = await fetch(`${URL_API}/pessoa/atualizar/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(pessoaEdit),
+    });
+
+    if (!res.ok) {
+      throw new Error("Response not ok: ", res);
+    }
+    return await res.json();
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+const apiDeletePessoa = async (id) => {
+  try {
+    const res = await fetch(`${URL_API}/pessoa/deletar/${id}`, {
+      method: "DELETE",
+    });
+
+    if (!res.ok) {
+      throw new Error("Houve erro na atualização da pessoa");
+    }
+
     const result = await res.json();
     return result;
   } catch (error) {
     throw new Error(error.message);
   }
+};
+
+const apiGetPessoaById = async (id) => {
+  try {
+    const res = await fetch(`${URL_API}/pessoa/${id}`);
+
+    if (!res.ok) {
+      throw new Error("Houve na busca da pessoa. Pessoa não identificada");
+    }
+
+    const result = await res.json();
+    return result;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export {
+  apiAddPessoa,
+  apiGetPessoas,
+  apiGetPessoaById,
+  apiUpdatePessoa,
+  apiDeletePessoa,
 };

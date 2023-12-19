@@ -1,21 +1,34 @@
-const Pessoa = require("../models/pessoa");
+const ps = require("../services/pessoa.service");
 
-exports.listarPessoas = async (req, res) => {
-  try {
-    const pessoas = await Pessoa.findAll();
-    res.json(pessoas);
-  } catch (err) {
-    res.status(500).json({ message: `Erro: ${err.message}` });
-  }
+const pessoaController = {
+  listarPessoas: (req, res) => {
+    try {
+      const pessoas = ps.getPessoas();
+      res.json(pessoas);
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  },
+  listarPessoaPorId: (req, res) => {
+    try {
+      const pessoa = ps.getById(req.params.body);
+      res.json(pessoa);
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  },
+  editarPessoa: (req, res) => {
+    try {
+      const jaExist = ps.getById(req.params.id);
+      if (!jaExist) {
+        return res
+          .status(500)
+          .json({ message: "Esse usuário ainda não foi cadastrado!" });
+      }
+      const pessoa = ps.updatePessoa(req.body);
+      res.json(pessoa);
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  },
 };
-
-exports.inserirPessoa = async (req, res) => {
-  try {
-    const { nome, sobrenome, idade } = req.body;
-    const novaPessoa = await Pessoa.create({ nome, sobrenome, idade });
-    res.status(201).json(novaPessoa);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
-

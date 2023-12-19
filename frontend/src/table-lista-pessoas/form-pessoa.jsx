@@ -1,4 +1,4 @@
-const TablePessoa = ({ pessoas, handleClick }) => {
+const TablePessoa = ({ pessoas, handleEdit }) => {
   return (
     <>
       <div className="relative overflow-x-auto sm:rounded-lg mt-5 shadow-2xl">
@@ -25,10 +25,10 @@ const TablePessoa = ({ pessoas, handleClick }) => {
                 key={index}
                 className="hover:bg-gray-500/20"
                 onClick={(e) => {
-                  handleClick(e, pessoa);
+                  handleEdit(e, pessoa);
                 }}
                 onContextMenu={(e) => {
-                  handleClick(e, pessoa);
+                  handleEdit(e, pessoa);
                 }}
               >
                 <th

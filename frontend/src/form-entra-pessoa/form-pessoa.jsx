@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from "react";
 
-const FormPessoa = ({ selected, handleSubmit }) => {
+const FormPessoa = ({ onSelected, handleSubmit, resetSelected }) => {
   const [pessoa, setPessoa] = useState({});
 
-  useEffect(()=>{
-    setPessoa(selected)
-  }, [selected])
+  useEffect(() => {
+    setPessoa(onSelected);
+  }, [onSelected]);
 
   const submit = (e) => {
     e.preventDefault();
-    handleSubmit(pessoa);
+    console.log(pessoa);
+    handleSubmit(pessoa).then((result) => {
+      if (result) {
+        resetSelected();
+      }
+    });
   };
 
   return (
@@ -23,7 +28,7 @@ const FormPessoa = ({ selected, handleSubmit }) => {
             type="text"
             className="bg-secondary rounded-full py-2 px-3 text-fontcolor2 w-full"
             placeholder="Nome"
-            defaultValue={selected.nome}
+            defaultValue={onSelected.nome}
             onChange={(e) => setPessoa({ ...pessoa, nome: e.target.value })}
             required
           />
@@ -31,7 +36,7 @@ const FormPessoa = ({ selected, handleSubmit }) => {
             type="text"
             className="bg-secondary rounded-full py-2 px-3 text-fontcolor2 w-full"
             placeholder="Sobrenome"
-            defaultValue={selected.sobrenome}
+            defaultValue={onSelected.sobrenome}
             onChange={(e) =>
               setPessoa({ ...pessoa, sobrenome: e.target.value })
             }
@@ -41,7 +46,7 @@ const FormPessoa = ({ selected, handleSubmit }) => {
             type="number"
             className="bg-secondary rounded-full py-2 px-3 text-fontcolor2 w-full"
             placeholder="Idade"
-            defaultValue={selected.idade}
+            defaultValue={onSelected.idade}
             onChange={(e) =>
               setPessoa({ ...pessoa, idade: parseInt(e.target.value) })
             }
