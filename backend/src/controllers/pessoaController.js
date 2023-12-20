@@ -1,34 +1,84 @@
-const ps = require("../services/pessoa.service");
+const pessoaService = require("../services/pessoa.service");
 
-const pessoaController = {
-  listarPessoas: (req, res) => {
+const controllerPessoa = {
+  listarPessoas: async (req, res) => {
     try {
-      const pessoas = ps.getPessoas();
+      const pessoas = await pessoaService.getPessoas();
       res.json(pessoas);
     } catch (error) {
-      return res.status(500).json({ message: error.message });
+      console.log(error);
+      res.status(500).json({
+        statusCode: 500,
+        error: "Error na tentativa de listar todos os registros no banco",
+      });
     }
   },
-  listarPessoaPorId: (req, res) => {
+  buscarPessoaById: async (req, res) => {
     try {
-      const pessoa = ps.getById(req.params.body);
-      res.json(pessoa);
-    } catch (error) {
-      return res.status(500).json({ message: error.message });
-    }
-  },
-  editarPessoa: (req, res) => {
-    try {
-      const jaExist = ps.getById(req.params.id);
-      if (!jaExist) {
+      const pessoa = await pessoaService.findById(req.params.id);
+      if (!pessoa) {
         return res
-          .status(500)
-          .json({ message: "Esse usuário ainda não foi cadastrado!" });
+          .status(404)
+          .json({ statusCode: 404, error: "Essa pessoa não existe!" });
       }
-      const pessoa = ps.updatePessoa(req.body);
-      res.json(pessoa);
+      return res.json(pessoa);
     } catch (error) {
-      return res.status(500).json({ message: error.message });
+      return res.statusCode(500).json({
+        statusCode: 500,
+        error: "Erro busca pelo registro com Id específicado no banco",
+      });
+    }
+  },
+  inserirPessoa: async (req, res) => {
+    try {
+      const novaPessoa = await pessoaService.createPessoa(req.body);
+      res.status(201).json(novaPessoa);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        statusCode: 500,
+        error: "Erro na tentativa de inserir no registro no banco",
+      });
+    }
+  },
+  atualizarPessoa: async (req, res) => {
+    try {
+      const pessoaExistente = await pessoaService.findById(req.params.id);
+      console.log(pessoaExistente);
+      if (!pessoaExistente) {
+        return res
+          .status(404)
+          .json({ statusCode: 404, error: "Pessoa não encontrada" });
+      }
+      const pessoaAtualizada = await pessoaService.updatePessoa(req.body);
+      return res.json(pessoaAtualizada);
+    } catch (error) {
+      return res.statusCode(500).json({
+        statusCode: 500,
+        error: "Error na tentativa de atualização do registro",
+      });
+    }
+  },
+  deletarPessoa: async (req, res) => {
+    try {
+      const pessoaExistente = await pessoaService.findById(req.params.id);
+      if (!pessoaExistente) {
+        return res
+          .status(404)
+          .json({ statusCode: 404, error: "Pessoa não encontrada" });
+      }
+
+      await pessoaService.deletePessoa(req.params.id);
+      return res.json({
+        statusCode: 200,
+        message: `A pessoa com id: ${req.params.id} foi deletada com sucesso!`,
+      });
+    } catch (error) {
+      return res
+        .statusCode(500)
+        .json({ statusCode: 500, error: "Erro ao tentar deletar o registro" });
     }
   },
 };
+
+module.exports = controllerPessoa;

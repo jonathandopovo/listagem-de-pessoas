@@ -13,11 +13,15 @@ const pessoaService = {
   updatePessoa: async ({ id, nome, sobrenome, idade }) => {
     return await Pessoa.update(
       { nome, sobrenome, idade },
-      { where: { id: id } }
+      {
+        where: { id: id },
+      }
     );
   },
-  deletePessoa: async () => {
-    return await Pessoa.destroy({ where: { id: id } });
+  delete: async (id) => {
+    return await Pessoa.destroy({
+      where: { id: id },
+    });
   },
 };
 
